@@ -9,10 +9,10 @@ module "eks" {
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
 
-  eks_managed_node_group_defaults = {
-    ami_type = "AL2023_x86_64"
+  # eks_managed_node_group_defaults = {
+  #   ami_type = "AL2023_x86_64"
 
-  }
+  # }
 
   eks_managed_node_groups = {
     one = {
@@ -23,6 +23,11 @@ module "eks" {
       min_size     = 1
       max_size     = 3
       desired_size = 2
+
+      launch_template = {
+        id      = aws_launch_template.eks_al2023.id
+        version = "$Latest"
+      }
     }
 
     two = {
@@ -33,6 +38,11 @@ module "eks" {
       min_size     = 1
       max_size     = 2
       desired_size = 1
+
+      launch_template = {
+        id      = aws_launch_template.eks_al2023.id
+        version = "$Latest"
+      }
     }
   }
 }
